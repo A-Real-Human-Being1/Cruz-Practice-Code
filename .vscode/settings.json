@@ -25,8 +25,7 @@
         "LD_LIBRARY_PATH": "${workspaceFolder}/build/jni/release",
         "DYLD_LIBRARY_PATH": "${workspaceFolder}/build/jni/release"
       }
-    },
-    null
+    }
   ],
   "java.test.defaultConfig": "WPIlibUnitTests",
   "java.import.gradle.annotationProcessing.enabled": false,
@@ -58,9 +57,18 @@
     "javax.smartcardio.*",
     "org.wpilib.math.proto.*",
     "org.wpilib.math.**.proto.*",
-    "org.wpilib.math.**.struct.*",
-    null
+    "org.wpilib.math.**.struct.*"
   ],
   "java.debug.settings.enableRunDebugCodeLens": false,
-  "java.dependency.enableDependencyCheckup": false
+  "java.dependency.enableDependencyCheckup": false,
+  "editor.defaultFormatter": "richardwillis.vscode-spotless-gradle",
+  "[json]": {
+    "editor.defaultFormatter": "richardwillis.vscode-spotless-gradle"
+  },
+  "[java]": {
+    "editor.defaultFormatter": "richardwillis.vscode-spotless-gradle"
+  },
+  "java.diagnostic.filter": [
+    "**build/generated**"
+  ]
 }
