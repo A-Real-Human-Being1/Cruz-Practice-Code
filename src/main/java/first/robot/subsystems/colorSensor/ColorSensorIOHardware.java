@@ -26,9 +26,9 @@ public class ColorSensorIOHardware implements ColorSensorIO {
   private double IR0 = 0;
   private boolean isConnected0 = false;
 
-  // both colorsensor object
+  // make both colorsensor objects (port 0 is unused)
   ColorSensorV3 ColorSensorPort1 = new ColorSensorV3(I2C.Port.PORT_1);
-  ColorSensorV3 ColorSensorPort0 = new ColorSensorV3(I2C.Port.PORT_0);
+  // ColorSensorV3 ColorSensorPort0 = new ColorSensorV3(I2C.Port.PORT_0);
 
   // hardware object constructor
   public ColorSensorIOHardware() {
@@ -53,12 +53,12 @@ public class ColorSensorIOHardware implements ColorSensorIO {
     inputs.isConnected1 = ColorSensorPort1.isConnected();
   }
 
-  // update inputs for port 2
-  @Override
-  public void updateColorInputsPort0(ColorInputs inputs) {
-    inputs.IR0 = ColorSensorPort0.getIR();
-    inputs.detectedColor0 = ColorSensorPort0.getColor();
-    inputs.proximity0 = ColorSensorPort0.getProximity();
-    inputs.isConnected0 = ColorSensorPort0.isConnected();
-  }
+//   // update inputs for port 0  (Unused)
+//   @Override
+//   public void updateColorInputsPort0(ColorInputs inputs) {
+//     inputs.IR0 = ColorSensorPort0.getIR();
+//     inputs.detectedColor0 = ColorSensorPort0.getColor();
+//     inputs.proximity0 = ColorSensorPort0.getProximity();
+//     inputs.isConnected0 = ColorSensorPort0.isConnected();
+//   }
 }

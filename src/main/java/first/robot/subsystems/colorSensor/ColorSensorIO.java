@@ -30,6 +30,6 @@ public interface ColorSensorIO {
   // Gets the inputs from the color sensor on port 1
   public default void updateColorInputsPort1(ColorInputs inputs) {}
 
-  // Gets the inputs from the color sensor on port 0
-  public default void updateColorInputsPort0(ColorInputs inputs) {}
+  // // Gets the inputs from the color sensor on port 0 (Unused)
+  // public default void updateColorInputsPort0(ColorInputs inputs) {}
 }
