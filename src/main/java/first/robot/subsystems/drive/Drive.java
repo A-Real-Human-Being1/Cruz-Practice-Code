@@ -14,8 +14,11 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import first.generated.CompTunerConstants;
@@ -31,6 +34,8 @@ import org.littletonrobotics.junction.Logger;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.SubsystemBase;
 import org.wpilib.command2.sysid.SysIdRoutine;
+import org.wpilib.driverstation.Alliance;
+import org.wpilib.driverstation.MatchState;
 import org.wpilib.driverstation.RobotState;
 import org.wpilib.math.estimator.SwerveDrivePoseEstimator;
 import org.wpilib.math.geometry.Pose2d;
@@ -170,29 +175,29 @@ public class Drive extends SubsystemBase {
     // Start odometry thread
     PhoenixOdometryThread.getInstance().start();
 
-    // TODO: Configure AutoBuilder for PathPlanner
-    // AutoBuilder.configure(
-    //     this::getPose,
-    //     this::setPose,
-    //     this::getChassisVelocities,
-    //     this::runVelocity,
-    //     new PPHolonomicDriveController(
-    //         new PIDConstants(8.0, 0.0, 0.0),           // 8 - original     13, 0.5
-    //         new PIDConstants(8.0, 0.0, 0.0)),          // 8 - original
-    //     PP_CONFIG,
-    //     () -> MatchState.getAlliance().orElse(Alliance.BLUE) == Alliance.RED,
-    //     this
-    // );
+    AutoBuilder.configure(
+        this::getPose,
+        this::setPose,
+        this::getChassisVelocities,
+        this::runVelocity,
+        new PPHolonomicDriveController(
+            new PIDConstants(8.0, 13.0, 0.5), new PIDConstants(8.0, 13.0, 0.5)),
+        PP_CONFIG,
+        () -> MatchState.getAlliance().orElse(Alliance.BLUE) == Alliance.RED,
+        this);
 
     Pathfinding.setPathfinder(new LocalADStarAK());
 
-    PathPlannerLogging.setLogActivePathCallback(activePath -> {
-      Logger.recordOutput("Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-    });
+    PathPlannerLogging.setLogActivePathCallback(
+        activePath -> {
+          Logger.recordOutput(
+              "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+        });
 
-    PathPlannerLogging.setLogTargetPoseCallback(targetPose -> {
-      Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-    });
+    PathPlannerLogging.setLogTargetPoseCallback(
+        targetPose -> {
+          Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+        });
 
     // Configure SysId
     sysId =

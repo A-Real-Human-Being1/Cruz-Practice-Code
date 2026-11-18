@@ -14,6 +14,12 @@ import static org.wpilib.units.Units.Volts;
 
 import com.ctre.phoenix6.CANBus;
 import com.limelightvision.Limelight;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.util.FileVersionException;
 import first.generated.CompTunerConstants;
 import first.robot.Constants.DriveConstants;
 import first.robot.commands.drive.DriveCommands;
@@ -31,10 +37,14 @@ import first.robot.subsystems.vision.AprilTagVision;
 import first.robot.subsystems.vision.CameraIO;
 import first.robot.subsystems.vision.CameraIOLimelight;
 import first.robot.subsystems.vision.CameraIOLimelight4;
+import java.io.IOException;
+import java.util.List;
+import org.json.simple.parser.ParseException;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.Commands;
 import org.wpilib.command2.button.CommandXboxController;
 import org.wpilib.hardware.bus.CANPort;
+import org.wpilib.math.geometry.Rotation2d;
 
 public class RobotContainer {
 
@@ -169,5 +179,44 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");
+  }
+
+  public Command followTestPath() throws FileVersionException, IOException, ParseException {
+    // Load the path you want to follow using its name in the GUI
+    PathPlannerPath testPath = PathPlannerPath.fromPathFile("testPath");
+    // Create a path following command using AutoBuilder. This will also trigger event markers.
+    return AutoBuilder.followPath(testPath);
+  }
+
+  /**
+   * <p>waypoints is a list of the following format: The rotation component of the pose should be the
+   * direction of travel. Do not use holonomic rotation. List<Waypoint> waypoints =
+   * PathPlannerPath.waypointsFromPoses( new Pose2d( x, y, rotation), new Pose2d( x, y, rotation) );
+   *
+   * <p>endRotation should be a rotation2d of your intended ending rotation
+   *
+   * <p>endVelo is ending velocity in meters per second!!!
+   *
+   * @param waypoints
+   * @param endRotation
+   * @param endVelo
+   * @return
+   */
+  public Command makeAndFollowPath(
+      List<Waypoint> waypoints, double endVelo, Rotation2d endRotation) {
+
+    // Create the path using the waypoints passed in
+    PathPlannerPath path =
+        new PathPlannerPath(
+            waypoints,
+            PathConstraints.unlimitedConstraints(12.0), // no constraints
+            null, // irrelavant, so its null
+            new GoalEndState(endVelo, endRotation) // Goal end state. assumed you want to stop
+            );
+
+    // Prevent the path from being flipped if the coordinates are already correct
+    path.preventFlipping = true;
+
+    return AutoBuilder.followPath(path);
   }
 }
