@@ -190,8 +190,11 @@ public class RobotContainer {
 
   /**
    * <p>waypoints is a list of the following format: The rotation component of the pose should be the
-   * direction of travel. Do not use holonomic rotation. List<Waypoint> waypoints =
-   * PathPlannerPath.waypointsFromPoses( new Pose2d( x, y, rotation), new Pose2d( x, y, rotation) );
+   * direction of travel. Do not use holonomic rotation. 
+   * List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses( 
+   * new Pose2d(x, y, rotation),
+   * new Pose2d(x, y, rotation)
+   * );
    *
    * <p>endRotation should be a rotation2d of your intended ending rotation
    *
